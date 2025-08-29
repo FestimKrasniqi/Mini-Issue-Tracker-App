@@ -25,9 +25,10 @@ class Issue extends Model
 
 
 
-   public function projects() {
+public function project()
+{
     return $this->belongsTo(Project::class);
-   }
+}
 
    public function comments() {
     return $this->hasMany(Comment::class);
