@@ -11,6 +11,7 @@ use App\Models\Project;
  */
 class IssueFactory extends Factory
 {
+    protected $model = Issue::class;
     /**
      * Define the model's default state.
      *
@@ -18,12 +19,14 @@ class IssueFactory extends Factory
      */
     public function definition(): array
     {
+        
+
         return [
             'title' => $this->faker->sentence(6),
             'description' => $this->faker->paragraph(),
             'status' => $this->faker->randomElement(['open','in_progress','closed']),
             'priority' => $this->faker->randomElement(['low','medium','high']),
-            'due_date'=> $this->faker->date(),
+            'due_date'=> $this->faker->optional()->date(),
             'project_id' => Project::factory()
         ];
     }

@@ -47,7 +47,7 @@ class ProjectController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'start_date' => $request->start_date,
-            'deadline' => $request->end_date
+            'deadline' => $request->deadline
         ]);
 
       
