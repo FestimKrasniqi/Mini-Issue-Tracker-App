@@ -34,7 +34,9 @@ public function project()
     return $this->hasMany(Comment::class);
    }
 
-   public function tags() {
-    return $this->belongsToMany(Tag::class,'issue_tag');
-   }
+   public function tags()
+{
+    return $this->belongsToMany(Tag::class, 'issue_tag', 'issue_id', 'tag_id');
+}
+
 }

@@ -19,6 +19,6 @@ class Tag extends Model
     protected $primaryKey = 'id';
 
     public function issues() {
-        return $this->belongsToMany(Issue::class,'issue_tag');
+       return $this->belongsToMany(Issue::class, 'issue_tag', 'tag_id', 'issue_id');
     }
 }

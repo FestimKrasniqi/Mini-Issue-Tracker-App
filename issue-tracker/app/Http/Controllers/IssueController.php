@@ -87,16 +87,13 @@ class IssueController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Issue $issue)
-    {
-        $issue = Issue::with('tags','comments')->findOrFail($issue->id);
-        if(!$issue) {
-            return redirect()->route('issues.index')->with('error','Issue not found');
-        }
-
-        return view('issues.show',compact('issue'));
-    }
-
+     public function show(Issue $issue)
+     
+   {
+    $issue->load('tags', 'comments', 'project'); 
+    $tags = Tag::all();
+    return view('issues.show', compact('issue', 'tags'));
+   }
     /**
      * Show the form for editing the specified resource.
      */

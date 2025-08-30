@@ -21,6 +21,7 @@
             <td>{{ $project->start_date }}</td>
             <td>{{ $project->deadline }}</td>
             <td>
+                <a href="{{ route('projects.show', $project->id) }}" class="btn btn-info btn-sm">View</a>
                 <a class="btn btn-sm btn-warning" href="{{ route('projects.edit', $project) }}">Edit</a>
 
                 <form action="{{ route('projects.destroy', $project) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
