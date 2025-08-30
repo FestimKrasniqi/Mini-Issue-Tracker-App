@@ -23,6 +23,8 @@
         </div>
 
         <button type="submit" class="btn btn-success">Create</button>
+        <a href="{{ route('tags.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
+   
 </div>
 @endsection

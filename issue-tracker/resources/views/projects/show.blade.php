@@ -27,8 +27,12 @@
         </tr>
         @endforeach
     </tbody>
+
 </table>
+
+
 @else
 <p>No issues found for this project.</p>
 @endif
+<a href = "{{ route('projects.index')}}" class="btn btn-secondary mt-3">Back to List</a>
 @endsection

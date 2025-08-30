@@ -48,5 +48,7 @@
         <button type="submit" class="btn btn-primary">Create</button>
         <a href="{{ route('issues.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
+    
 </div>
+
 @endsection
