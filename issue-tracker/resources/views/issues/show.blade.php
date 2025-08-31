@@ -10,16 +10,16 @@
 
     <h4>Tags</h4>
     <div id="issue-tags">
-    @foreach($issue->tags as $tag)
-        <span class="badge bg-info me-1">{{ $tag->name }}</span>
-    @endforeach
-</div>
+        @foreach($issue->tags as $tag)
+            <span class="badge bg-info me-1">{{ $tag->name }}</span>
+        @endforeach
+    </div>
 
     <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#tagModal">
         Manage Tags
     </button>
 
-    <!-- Modal -->
+    
     <div class="modal fade" id="tagModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -29,29 +29,33 @@
                 </div>
                 <div class="modal-body">
                     @foreach($tags as $tag)
-                      <div class="form-check">
-                     <input type="checkbox" class="form-check-input toggle-tag"
-                      data-tag-id="{{ $tag->id }}"
-                    {{ $issue->tags->contains($tag->id) ? 'checked' : '' }}>
-                    <label>{{ $tag->name }}</label>
-                   </div>
-                  @endforeach
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input toggle-tag"
+                                data-tag-id="{{ $tag->id }}"
+                                {{ $issue->tags->contains($tag->id) ? 'checked' : '' }}>
+                            <label>{{ $tag->name }}</label>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 
+
     <h4 class="mt-3">Comments</h4>
-    @forelse($issue->comments as $comment)
-        <div class="card mb-2">
-            <div class="card-body">
-                {{ $comment->body }}
-                <div class="text-muted small">By {{ $comment->author_name ?? 'Anonymous' }} on {{ $comment->created_at }}</div>
-            </div>
+    <div id="comments-list">
+    </div>
+
+    <form id="comment-form" data-issue-id="{{ $issue->id }}" class="mt-3">
+        @csrf
+        <div class="mb-2">
+            <input type="text" name="author_name" class="form-control" placeholder="Your name" required>
         </div>
-    @empty
-        <p>No comments yet.</p>
-    @endforelse
+        <div class="mb-2">
+            <textarea name="body" class="form-control" placeholder="Write a comment..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Add Comment</button>
+    </form>
 
     <a href="{{ route('issues.index') }}" class="btn btn-secondary mt-3">Back to List</a>
 </div>
@@ -62,10 +66,10 @@
 document.addEventListener("DOMContentLoaded", function() {
     const issueId = "{{ $issue->id }}";
 
+    
     document.querySelectorAll('.toggle-tag').forEach(el => {
         el.addEventListener('change', function() {
             const tagId = this.dataset.tagId;
-            console.log('Checkbox changed:', tagId, 'Checked?', this.checked);
 
             fetch("{{ route('issues.tags.toggle') }}", {
                 method: "POST",
@@ -77,21 +81,101 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(res => res.json())
             .then(data => {
-                console.log('Server response:', data);
-
                 const tagsDiv = document.getElementById('issue-tags');
                 tagsDiv.innerHTML = '';
                 data.tags.forEach(tag => {
                     tagsDiv.innerHTML += `<span class="badge bg-info me-1">${tag}</span>`;
                 });
-
-                // Update checkbox state in case something went wrong
                 this.checked = (data.status === 'attached');
             })
             .catch(err => console.error('Fetch error:', err));
         });
     });
+
+function loadComments(page = 1) {
+    fetch(`/issues/${issueId}/comments?page=${page}`)
+        .then(res => res.json())
+        .then(data => {
+            const commentsDiv = document.getElementById('comments-list');
+            commentsDiv.innerHTML = '';
+
+            if (data.data.length === 0) {
+                commentsDiv.innerHTML = '<p>No comments yet.</p>';
+            } else {
+                data.data.forEach(comment => {
+                  
+                    const createdAt = new Date(comment.created_at);
+                    const formattedDate = createdAt.toLocaleString('en-GB', { 
+                        day: '2-digit', 
+                        month: 'short', 
+                        year: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+
+                    commentsDiv.innerHTML += `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                ${comment.body}
+                                <div class="text-muted small">
+                                    By ${comment.author_name ?? 'Anonymous'} on ${formattedDate}
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+        });
+}
+loadComments();
+
+
+document.getElementById('comment-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch(`/issues/${issueId}/comments`, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.errors) {
+            console.error(data.errors);
+        } else {
+          
+            const createdAt = new Date(data.comment.created_at);
+            const formattedDate = createdAt.toLocaleString('en-GB', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+
+           
+            const commentsDiv = document.getElementById('comments-list');
+            const newComment = `
+                <div class="card mb-2">
+                    <div class="card-body">
+                        ${data.comment.body}
+                        <div class="text-muted small">
+                            By ${data.comment.author_name ?? 'Anonymous'} on ${formattedDate}
+                        </div>
+                    </div>
+                </div>`;
+            commentsDiv.insertAdjacentHTML('afterbegin', newComment);
+
+           
+            this.reset();
+        }
+    })
+    .catch(err => console.error(err));
 });
 
+});
 </script>
 @endsection
