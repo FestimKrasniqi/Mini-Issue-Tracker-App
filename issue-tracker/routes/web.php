@@ -15,11 +15,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('projects', ProjectController::class);
+    Route::get('/issues/search',[IssueController::class,'search'])->name('issues.search');
     Route::resource('issues',IssueController::class);
     Route::resource('tags',TagController::class);
     Route::post('toggle',[TagController::class,'toggleTag'])->name('issues.tags.toggle');

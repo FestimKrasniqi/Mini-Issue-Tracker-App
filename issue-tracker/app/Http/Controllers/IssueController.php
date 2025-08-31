@@ -94,6 +94,8 @@ class IssueController extends Controller
     $tags = Tag::all();
     return view('issues.show', compact('issue', 'tags'));
    }
+
+   
     /**
      * Show the form for editing the specified resource.
      */
@@ -166,4 +168,16 @@ class IssueController extends Controller
         $issue->delete();
         return redirect()->route('issues.index')->with('success','Issue deleted successfully');
     }
+
+   public function search(Request $request)
+{
+    $query = $request->input('query');
+
+    $issues = Issue::with(['tags', 'project'])
+        ->where('title', 'like', "%$query%")
+        ->orWhere('description', 'like', "%$query%")
+        ->get();
+
+    return response()->json($issues);
+}
 }
