@@ -3,6 +3,8 @@
 @section('content')
 <h1>Projects</h1>
 
+<a href="{{ route('dashboard') }}" class="btn btn-secondary mb-3">Dashboard</a>
+
 <table class="table table-bordered">
     <thead>
         <tr>

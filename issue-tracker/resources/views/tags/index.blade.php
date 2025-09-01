@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h2>Tags</h2>
+    <h1>Tags</h1>
+
+    <a href="{{ route('dashboard') }}" class="btn btn-secondary mb-3">Dashboard</a>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

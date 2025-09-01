@@ -4,14 +4,16 @@
 <div class="container">
     <h1>Issues</h1>
 
-    {{-- Search Input --}}
+     <a href="{{ route('dashboard') }}" class="btn btn-secondary mb-3">Dashboard</a>
+
+   
     <div class="row mb-3">
         <div class="col-md-6">
             <input type="text" id="search-input" class="form-control" placeholder="Search issues...">
         </div>
     </div>
 
-    {{-- Filters --}}
+   
     <form method="GET" action="{{ route('issues.index') }}" class="mb-3">
         <div class="row">
             <div class="col-md-3">
@@ -141,8 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 })
                 .catch(err => console.error(err));
-        }, 300); // 300ms debounce
+        }, 300); 
     });
 });
+
 </script>
 @endsection

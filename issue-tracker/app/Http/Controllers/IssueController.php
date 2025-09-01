@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Issue;
 use App\Models\Tag;
+use App\Models\User;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -90,9 +91,10 @@ class IssueController extends Controller
      public function show(Issue $issue)
      
    {
-    $issue->load('tags', 'comments', 'project'); 
+    $issue->load('tags', 'comments', 'project','members'); 
     $tags = Tag::all();
-    return view('issues.show', compact('issue', 'tags'));
+    $users = User::all();
+    return view('issues.show', compact('issue', 'tags','users'));
    }
 
    
@@ -180,4 +182,24 @@ class IssueController extends Controller
 
     return response()->json($issues);
 }
+
+   public function toggleMember(Request $request)
+{
+    $issue = Issue::findOrFail($request->issue_id);
+    $userId = $request->user_id;
+
+    if($issue->members->contains($userId)) {
+        $issue->members()->detach($userId);
+        $status = 'detached';
+    } else {
+        $issue->members()->attach($userId);
+        $status = 'attached';
+    }
+
+    $members = $issue->members()->pluck('name');
+
+    return response()->json(['status' => $status, 'members' => $members]);
+}
+
+
 }

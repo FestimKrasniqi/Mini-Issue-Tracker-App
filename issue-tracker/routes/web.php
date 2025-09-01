@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('projects', ProjectController::class);
     Route::get('/issues/search',[IssueController::class,'search'])->name('issues.search');
+    Route::post('issues/members/toggle', [IssueController::class, 'toggleMember'])->name('issues.members.toggle');
     Route::resource('issues',IssueController::class);
     Route::resource('tags',TagController::class);
     Route::post('toggle',[TagController::class,'toggleTag'])->name('issues.tags.toggle');

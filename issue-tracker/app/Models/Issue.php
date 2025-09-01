@@ -25,18 +25,30 @@ class Issue extends Model
 
 
 
-public function project()
-{
-    return $this->belongsTo(Project::class);
-}
+    public function project() {
 
-   public function comments() {
-    return $this->hasMany(Comment::class);
+    return $this->belongsTo(Project::class);
+
    }
 
-   public function tags()
-{
+   public function comments() {
+
+    return $this->hasMany(Comment::class);
+
+   }
+
+   public function tags() {
+
     return $this->belongsToMany(Tag::class, 'issue_tag', 'issue_id', 'tag_id');
-}
+
+  }
+
+    public function members() {
+
+        return $this->belongsToMany(User::class,'issue_user','issue_id','user_id');
+
+    }
+
+   
 
 }
