@@ -19,6 +19,18 @@ It allows creating and managing projects, assigning issues with tags, filtering/
 
 ---
 
+## 📋 Prerequisites
+Before installing, make sure you have the following installed on your system:
+
+- [PHP >= 8.2](https://www.php.net/)  
+- [Composer](https://getcomposer.org/)  
+- [Node.js & NPM](https://nodejs.org/)  
+- [MySQL](https://dev.mysql.com/downloads/) (or provided by **XAMPP**)  
+- [XAMPP](https://www.apachefriends.org/index.html) (includes Apache, PHP, MySQL)  
+- [Git](https://git-scm.com/)  
+
+---
+
 ## 🛠️ Tech Stack
 - **Backend:** Laravel 12
 - **Frontend:** Blade templates + Bootstrap 5  
@@ -72,16 +84,20 @@ php artisan migrate
 php artisan serve
 ```
 
+Your server should now be running at `http://localhost:8000`.
+
 ## 👥 User Roles
 
 - Project Owner: Can edit/delete only their own projects.
 - Project Members: Can view issues and be assigned to them.
 
+---
 
 ## 🔑 Authentication
 
 - This project uses Laravel Breeze for authentication.
 
+---
 
 ## 🧑‍💻 Author
 
