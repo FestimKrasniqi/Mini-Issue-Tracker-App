@@ -13,7 +13,8 @@ class Project extends Model
         'name',
         'description',
         'start_date',
-        'deadline'
+        'deadline',
+        'owner_id'
     ];
 
    
@@ -24,5 +25,9 @@ class Project extends Model
     public function issues()
     {
         return $this->hasMany(Issue::class);
+    }
+
+    public function owner() {
+        return $this->belongsTo(User::class);
     }
 }

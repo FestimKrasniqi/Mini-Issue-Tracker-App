@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
 class ProjectController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -47,7 +49,8 @@ class ProjectController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'start_date' => $request->start_date,
-            'deadline' => $request->deadline
+            'deadline' => $request->deadline,
+            'owner_id' => auth()->id(),
         ]);
 
       
@@ -106,6 +109,8 @@ class ProjectController extends Controller
             return redirect()->route('projects.index')->with('error','Project not found');
         }
 
+        $this->authorize('update',$project);
+
         $project->update([
             'name' => $request->name ?? $project->name,
             'description' => $request->description ?? $project->description,
@@ -127,6 +132,8 @@ class ProjectController extends Controller
         if(!$project) {
             return redirect()->route('projects.index')->with('error','Project not found');
         }
+
+        $this->authorize('delete',$project);
 
         $project->delete();
 
