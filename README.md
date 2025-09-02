@@ -61,9 +61,9 @@ npm run dev
   - Update the `.env` file with your database credentials and other settings:
 
   ```env
-  DB_DATABASE=issue_tracker
-  DB_USERNAME=root
-  DB_PASSWORD=
+  DB_DATABASE=your_db_name
+  DB_USERNAME=yor_db_username
+  DB_PASSWORD=your_db_password
   ```
 
   3. **Generate application key:**
