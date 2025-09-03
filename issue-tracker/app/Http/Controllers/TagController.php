@@ -32,7 +32,7 @@ class TagController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'name' => 'required|string|max:255|unique:tags,name',
+            'name' => 'required|string|max:255|unique:tag,name',
             'color' => 'nullable|string|max:7'
         ]);
 
@@ -54,20 +54,20 @@ class TagController extends Controller
     $issue = Issue::findOrFail($request->issue_id);
     $tagId = $request->tag_id;
 
-    // Use syncWithoutDetaching to ensure attach/detach works
+   
     if ($issue->tags->contains($tagId)) {
-        $issue->tags()->detach($tagId); // Remove from pivot
+        $issue->tags()->detach($tagId); 
         $status = 'detached';
     } else {
-        $issue->tags()->attach($tagId); // Add to pivot
+        $issue->tags()->attach($tagId); 
         $status = 'attached';
     }
 
-    $issue->load('tags'); // reload
+    $issue->load('tags'); 
 
     return response()->json([
         'status' => $status,
-        'tags' => $issue->tags->pluck('name') // send updated tag names
+        'tags' => $issue->tags->pluck('name') 
     ]);
 }
 

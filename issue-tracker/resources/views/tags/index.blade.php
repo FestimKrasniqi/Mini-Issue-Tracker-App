@@ -6,10 +6,7 @@
 
     <a href="{{ route('dashboard') }}" class="btn btn-secondary mb-3">Dashboard</a>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
+  
     <a href="{{ route('tags.create') }}" class="btn btn-primary mb-3">Create Tag</a>
 
     <table class="table table-bordered">
