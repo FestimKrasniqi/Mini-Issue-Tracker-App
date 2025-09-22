@@ -42,9 +42,17 @@
         </div>
 
         <div class="mb-3">
-            <label>Project Name</label>
-            <input type="text" name="name" value="{{ old('name', $issue->project->name ?? '') }}" class="form-control">
-        </div>
+      <label for="project_id" class="form-label">Project</label>
+      <select name="project_id" id="project_id" class="form-select">
+        <option value="">-- Select a Project --</option>
+        @foreach ($projects as $project)
+            <option value="{{ $project->id }}"
+                {{ old('project_id', $issue->project_id) == $project->id ? 'selected' : '' }}>
+                {{ $project->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('issues.index') }}" class="btn btn-secondary">Cancel</a>

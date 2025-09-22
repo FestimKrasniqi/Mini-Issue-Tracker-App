@@ -42,7 +42,8 @@ class IssueController extends Controller
      */
     public function create()
     {
-        return view('issues.create');
+        $projects = Project::all();
+        return view('issues.create',compact('projects'));
     }
 
     /**
@@ -56,29 +57,25 @@ class IssueController extends Controller
             'status' => 'required|in:open,in_progress,closed',
             'priority' => 'required|in:low,medium,high',
             'due_date' => 'nullable|date|after_or_equal:today',
-            'name' => 'required|string|max:255'
+            'project_id' => 'required|exists:projects,id'
         ]);
 
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $project = Project::where('name',$request->name)->first();
-
-        if(!$project) {
-            return redirect()->back()->with('error','Project not found')->withInput();
-        }
+       
 
         $issue = Issue::create([
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
             'priority' => $request->priority,
-            'due_date' => $request->due_date
+            'due_date' => $request->due_date,
+            'project_id' => $request->project_id
         ]);
         
-        $issue->project()->associate($project);
-        $issue->save();
+        
 
         return redirect()->route('issues.index')->with('success','Issue created successfully');
 
@@ -91,10 +88,15 @@ class IssueController extends Controller
      public function show(Issue $issue)
      
    {
-    $issue->load('tags', 'comments', 'project','members'); 
+
+    $issue->load('tags', 'comments', 'project','members');
+
     $tags = Tag::all();
+
     $users = User::all();
+
     return view('issues.show', compact('issue', 'tags','users'));
+
    }
 
    
@@ -104,11 +106,12 @@ class IssueController extends Controller
     public function edit(Issue $issue)
     {
         $issue = Issue::with('project')->findOrFail($issue->id);
+        $projects = Project::all();
         if(!$issue) {
             return redirect()->route('issues.index')->with('error','Issue not found');
         }
 
-        return view('issues.edit',compact('issue'));
+        return view('issues.edit',compact('issue','projects'));
     }
 
     /**
@@ -122,7 +125,7 @@ class IssueController extends Controller
             'status' => 'sometimes|in:open,in_progress,closed',
             'priority' => 'sometimes|in:low,medium,high',
             'due_date' => 'nullable|date|after_or_equal:today',
-            'name' => 'sometimes|string|max:255'
+            'project_id'  => 'sometimes|exists:projects,id'
         ]);
 
         if($validator->fails()) {
@@ -140,17 +143,11 @@ class IssueController extends Controller
             'description' => $request->description ?? $issue->description,
             'status' => $request->status ?? $issue->status,
             'priority' => $request->priority ?? $issue->priority,
-            'due_date' => $request->due_date ?? $issue->due_date
+            'due_date' => $request->due_date ?? $issue->due_date,
+            'project_id' => $request->project_id ?? $issue->project_id
         ]);
 
-        if($request->has('name')) {
-            $project = Project::where('name',$request->name)->first();
-            if(!$project) {
-                return redirect()->back()->with('error','Project not found')->withInput();
-            }
-            $issue->project()->associate($project);
-            $issue->save();
-        }
+        
 
         return redirect()->route('issues.index')->with('success','Issue updated successfully');
 
