@@ -84,9 +84,14 @@ QUEUE_CONNECTION=sync
 LOG_CHANNEL=stderr
 ```
 
+**Important**: 
+- Make sure `APP_ENV=production` is set (enables HTTPS forcing)
+- `APP_URL` must be `https://` not `http://`
+- `APP_DEBUG=false` in production for security
+
 **Where to find these values:**
 - **APP_KEY**: From your local `.env` file (the key you generated in Step 1)
-- **APP_URL**: Will be auto-assigned by Render (check after deployment starts)
+- **APP_URL**: Your Render domain with HTTPS (example: `https://mini-issue-tracker-app.onrender.com`)
 - **Database credentials**: From your PostgreSQL service details page on Render
 
 ### 6. Deploy
